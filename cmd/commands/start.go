@@ -5,12 +5,12 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
+	tea "github.com/charmbracelet/bubbletea"
+	"github.com/fdaygon/rift/cmd/ui"
 	"github.com/spf13/cobra"
 )
-
-type model struct {
-}
 
 // startCmd represents the start command
 var startCmd = &cobra.Command{
@@ -23,7 +23,7 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("start called")
+		startUp()
 	},
 }
 
@@ -43,4 +43,9 @@ func init() {
 
 func startUp() {
 
+	p := tea.NewProgram(ui.InitModel())
+	if _, err := p.Run(); err != nil {
+		fmt.Printf("Wow this is embarassing: %v ", err)
+		os.Exit(1)
+	}
 }
