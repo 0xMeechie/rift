@@ -2,79 +2,127 @@ package ui
 
 import (
 	"fmt"
+	"io"
+	"os"
+	"strings"
 
+	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
-type model struct {
-	choices  []string
-	cursor   int
-	selected map[int]struct{}
-}
+const listHeight = 25
 
-func InitModel() model {
-	return model{
-		choices:  []string{"Spotify", "Apple Music", "Tidal"},
-		selected: make(map[int]struct{}),
+var (
+	titleStyle        = lipgloss.NewStyle().Margin(2)
+	itemStyle         = lipgloss.NewStyle().PaddingLeft(4)
+	selectedItenStyle = lipgloss.NewStyle().PaddingLeft(2).Foreground(lipgloss.Color("170"))
+	paginationStyle   = list.DefaultStyles().PaginationStyle.PaddingLeft(4)
+	helpStyle         = list.DefaultStyles().HelpStyle.PaddingLeft(4).PaddingBottom(1)
+	quitTextStyle     = lipgloss.NewStyle().Margin(1, 0, 2, 4)
+)
+
+type item string
+
+func (i item) FilterValue() string { return "" }
+
+type itemDelegate struct{}
+
+func (d itemDelegate) Height() int                             { return 1 }
+func (d itemDelegate) Spacing() int                            { return 0 }
+func (d itemDelegate) Update(_ tea.Msg, _ *list.Model) tea.Cmd { return nil }
+func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list.Item) {
+	i, ok := listItem.(item)
+	if !ok {
+		return
 	}
 
+	str := fmt.Sprintf("%d. %s", index+1, i)
+
+	fn := itemStyle.Render
+
+	if index == m.Index() {
+		fn = func(s ...string) string {
+			return selectedItenStyle.Render("> " + strings.Join(s, " "))
+		}
+	}
+
+	fmt.Fprint(w, fn(str))
 }
 
-func (m model) Init() tea.Cmd {
-	return nil
+type model struct {
+	list     list.Model
+	choice   string
+	quitting bool
 }
+
+func (m model) Init() tea.Cmd { return nil }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 
-	case tea.KeyMsg:
-		switch msg.String() {
+	case tea.WindowSizeMsg:
+		m.list.SetWidth(msg.Width)
+		return m, nil
 
-		case "ctrl+c", "q":
+	case tea.KeyMsg:
+		switch keypress := msg.String(); keypress {
+
+		case "q", "ctrl+c":
+			m.quitting = true
 			return m, tea.Quit
 
-		case "up", "k":
-			if m.cursor > 0 {
-				m.cursor--
+		case "enter":
+			i, ok := m.list.SelectedItem().(item)
+			if ok {
+				m.choice = string(i)
 			}
-		case "down", "j":
-			if m.cursor < len(m.choices)-1 {
-				m.cursor++
-			}
-		case "enter", " ":
-			{
-				_, ok := m.selected[m.cursor]
-				if ok {
-					delete(m.selected, m.cursor)
-				} else {
-					m.selected[m.cursor] = struct{}{}
-				}
-			}
+
+			return m, tea.Quit
 		}
 	}
-	return m, nil
+
+	var cmd tea.Cmd
+	m.list, cmd = m.list.Update(msg)
+	return m, cmd
 }
 
 func (m model) View() string {
-	header := "What are we listening to today?"
-
-	for i, choice := range m.choices {
-
-		cursor := " "
-		if m.cursor == i {
-			cursor = ">"
-		}
-
-		checked := " "
-		if _, ok := m.selected[i]; ok {
-			checked = "x"
-		}
-
-		s += fmt.Sprintf("%s [%s] %s\n", cursor, checked, choice)
-
+	if m.choice != "" {
+		return quitTextStyle.Render(fmt.Sprintf("%s Sound good to me.", m.choice))
 	}
 
-	s += "\nPress q to quit.\n"
+	if m.quitting {
+		return quitTextStyle.Render("Not hungry thats cool homie")
+	}
+	return "\n" + m.list.View()
 
-	return s
+}
+
+func InitStartupList() {
+	items := []list.Item{
+		item("Spotify"),
+		item("Apple Music"),
+		item("Tidal"),
+	}
+
+	var defaultWidth int
+	defaultWidth = 20
+
+	l := list.New(items, itemDelegate{}, defaultWidth, listHeight)
+	l.Title = "What are we listening to today?"
+
+	l.SetShowFilter(false)
+	l.SetFilteringEnabled(false)
+	l.Styles.Title = titleStyle
+	l.Styles.PaginationStyle = paginationStyle
+	l.Styles.HelpStyle = helpStyle
+
+	m := model{list: l}
+
+	if _, err := tea.NewProgram(m, tea.WithAltScreen()).Run(); err != nil {
+		fmt.Println("Error running program:", err)
+		os.Exit(1)
+	}
+
 }

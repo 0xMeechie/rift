@@ -1,13 +1,9 @@
 /*
 Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 */
-package cmd
+package commands
 
 import (
-	"fmt"
-	"os"
-
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/fdaygon/rift/cmd/ui"
 	"github.com/spf13/cobra"
 )
@@ -43,9 +39,6 @@ func init() {
 
 func startUp() {
 
-	p := tea.NewProgram(ui.InitModel())
-	if _, err := p.Run(); err != nil {
-		fmt.Printf("Wow this is embarassing: %v ", err)
-		os.Exit(1)
-	}
+	//spotify.GetToken()
+	ui.InitStartupList()
 }
