@@ -49,8 +49,9 @@ func main() {
 	//	go commands.Execute()
 	router.Get("/", HandleAuth)
 	router.Get("/login", HandleLogin)
+	spotifyAuthUrl := spotify.UserAuth()
 
-	exec.Command("open", "http://localhost:3000").Run()
+	exec.Command("open", spotifyAuthUrl).Run()
 
 	if err := http.ListenAndServe(":3000", router); err != nil {
 		fmt.Println("Unable to start server")
