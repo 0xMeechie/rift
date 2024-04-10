@@ -55,6 +55,7 @@ func main() {
 	//	go commands.Execute()
 	router.Get("/", HandleAuth)
 	router.Get("/login", HandleLogin)
+	router.Get("/callback", HandleCallBack)
 	spotifyAuthUrl := spotify.UserAuth()
 
 	exec.Command("open", spotifyAuthUrl).Run()
