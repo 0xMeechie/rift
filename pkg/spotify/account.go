@@ -1,6 +1,7 @@
 package spotify
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -17,12 +18,15 @@ var (
 	redirectURL     = "http://localhost:3000"
 	Token           AccessToken
 	scope           = "user-read-private user-read-email"
+	AuthCode        string
+	ResponseType    = "authorization_code"
 )
 
 type AccessToken struct {
-	Token     string `json:"access_token,omitempty"`
-	TokenType string `json:"token_type,omitempty"`
-	Duration  uint16 `json:"expires_in,omitempty"`
+	Token        string `json:"access_token,omitempty"`
+	TokenType    string `json:"token_type,omitempty"`
+	Duration     uint16 `json:"expires_in,omitempty"`
+	RefreshToken string `json:"refresh_token,omitempty"`
 }
 
 func checkSecrets() {
@@ -61,6 +65,11 @@ func UserAuth() string {
 
 }
 
+func encodeClient(id, secret string) string {
+	base := id + ":" + secret
+	return base64.StdEncoding.EncodeToString([]byte(base))
+}
+
 func GetToken() {
 	checkSecrets()
 
@@ -71,12 +80,16 @@ func GetToken() {
 		os.Exit(1)
 	}
 
+	authString := encodeClient(ClientID, ClientSecret)
+
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Add("Authorization", authString)
 
 	params := req.URL.Query()
-	params.Add("grant_type", "client_credentials")
-	params.Add("client_id", ClientID)
-	params.Add("client_secret", ClientSecret)
+	params.Add("grant_type", "authorization_code")
+	params.Add("code", AuthCode)
+	params.Add("redirect_uri", redirectURL)
+	fmt.Printf("Auth code: %s", AuthCode)
 
 	req.URL.RawQuery = params.Encode()
 
@@ -106,4 +119,4 @@ func (a *AccessToken) SetExpirationTime() {}
 
 func (a AccessToken) ExpirationTime() {}
 
-func (a *AccessToken) RefreshToken() {}
+func (a *AccessToken) Refresh() {}
