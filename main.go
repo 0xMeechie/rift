@@ -6,12 +6,9 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"os"
-	"time"
 
 	"github.com/fdaygon/rift/cmd/commands"
 	"github.com/fdaygon/rift/pkg/spotify"
-	"github.com/go-chi/chi/v5"
 )
 
 func HandleAuth(w http.ResponseWriter, r *http.Request) {
@@ -33,8 +30,6 @@ func HandleAuth(w http.ResponseWriter, r *http.Request) {
 
 func HandleLogin(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Log In Sucessful")
-	time.Sleep(time.Second * 5)
-	os.Exit(0)
 
 }
 
@@ -44,15 +39,15 @@ func HandleCallBack(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	router := chi.NewRouter()
-	go commands.Execute()
-	router.Get("/", HandleAuth)
-	router.Get("/login", HandleLogin)
-	router.Get("/callback", HandleCallBack)
+	//	router := chi.NewRouter()
+	commands.Execute()
+	//	router.Get("/", HandleAuth)
+	//	router.Get("/login", HandleLogin)
+	//	router.Get("/callback", HandleCallBack)
 
-	if err := http.ListenAndServe(":3000", router); err != nil {
-		fmt.Println("Unable to start server")
-		os.Exit(1)
-	}
+	//	if err := http.ListenAndServe(":3000", router); err != nil {
+	//		fmt.Println("Unable to start server")
+	//		os.Exit(1)
+	//	}
 
 }

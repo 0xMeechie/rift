@@ -4,11 +4,7 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package commands
 
 import (
-	"fmt"
-	"os"
-	"os/exec"
-
-	"github.com/fdaygon/rift/pkg/spotify"
+	"github.com/fdaygon/rift/cmd/ui"
 	"github.com/spf13/cobra"
 )
 
@@ -43,10 +39,11 @@ func init() {
 
 func startUp() {
 
-	spotifyAuthUrl := spotify.UserAuth()
-	if err := exec.Command("open", spotifyAuthUrl).Run(); err != nil {
-		fmt.Println("Unable to open auth page")
-		os.Exit(1)
-	}
-	// ui.InitStartupList()
+	//spotifyAuthUrl := spotify.UserAuth()
+	//if err := exec.Command("open", spotifyAuthUrl).Run(); err != nil {
+	//	fmt.Println("Unable to open auth page")
+	//	os.Exit(1)
+	//}
+	//ui.InitStartupList()
+	ui.InitModel()
 }

@@ -78,7 +78,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.choice = string(i)
 			}
 
-			return m, tea.Quit
+			return m, nil
 		}
 	}
 
