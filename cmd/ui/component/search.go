@@ -9,6 +9,8 @@ type SearchModel struct {
 	textBox textinput.Model
 }
 
+var ()
+
 func (s SearchModel) Init() tea.Cmd {
 	return textinput.Blink
 }
@@ -16,7 +18,7 @@ func (s SearchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return s, nil
 }
 func (s SearchModel) View() string {
-	return s.textBox.View()
+	return helpStyle.Render(s.textBox.View())
 }
 
 func InitSearch() SearchModel {

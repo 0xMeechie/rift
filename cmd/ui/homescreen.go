@@ -11,13 +11,14 @@ import (
 )
 
 var (
-	tableStyle = lipgloss.NewStyle().BorderStyle(lipgloss.RoundedBorder())
+	tableStyle = lipgloss.NewStyle().BorderStyle(lipgloss.DoubleBorder())
 )
 
 type homeModel struct {
-	Table  table.Model
-	Help   component.HelpModel
-	Search component.SearchModel
+	Table     component.PlaylistTable
+	SongTable component.SongTable
+	Help      component.HelpModel
+	Search    component.SearchModel
 }
 
 func (m homeModel) Init() tea.Cmd {
@@ -37,7 +38,7 @@ func (m homeModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m homeModel) View() string {
-	return lipgloss.PlaceHorizontal(100, 25, m.Help.View()) + "\n\n" + lipgloss.PlaceHorizontal(100, 20, m.Search.View()) + "\n\n" + lipgloss.PlaceVertical(20, 10, m.Table.View())
+	return lipgloss.PlaceHorizontal(100, 25, m.Help.View()) + "\n\n" + lipgloss.PlaceHorizontal(100, 20, m.Search.View()) + "\n\n" + lipgloss.JoinHorizontal(0.2, tableStyle.Render(m.Table.View()), tableStyle.Render(m.SongTable.View()))
 }
 func InitModel() {
 	colums := []table.Column{
@@ -54,7 +55,7 @@ func InitModel() {
 	modelTable := table.New(
 		table.WithColumns(colums),
 		table.WithRows(rows),
-		table.WithWidth(1080),
+		table.WithWidth(50),
 	)
 	style := table.DefaultStyles()
 
@@ -63,9 +64,10 @@ func InitModel() {
 	modelTable.SetStyles(style)
 
 	m := homeModel{
-		Table:  modelTable,
-		Help:   component.NewHelpModel(),
-		Search: component.InitSearch(),
+		Table:     component.InitPlaylist(),
+		Help:      component.NewHelpModel(),
+		Search:    component.InitSearch(),
+		SongTable: component.InitSong(),
 	}
 
 	if _, err := tea.NewProgram(m, tea.WithAltScreen()).Run(); err != nil {

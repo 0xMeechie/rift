@@ -6,6 +6,11 @@ import (
 	"github.com/charmbracelet/bubbles/help"
 	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
+)
+
+var (
+	helpStyle = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("7D56F4"))
 )
 
 type keymap struct {
@@ -37,31 +42,31 @@ func (k keymap) FullHelp() [][]key.Binding {
 var defaultKeys = keymap{
 	Up: key.NewBinding(
 		key.WithKeys("k", "up"),
-		key.WithHelp("↑/k", "move up"),
+		key.WithHelp("<↑/k>", "move up"),
 	),
 	Down: key.NewBinding(
 		key.WithKeys("j", "down"),
-		key.WithHelp("↓/j", "move down"),
+		key.WithHelp("<↓/j>", "move down"),
 	),
 	Left: key.NewBinding(
 		key.WithKeys("h", "left"),
-		key.WithHelp("/h", "move left"),
+		key.WithHelp("<←/h>", "move left"),
 	),
 	Right: key.NewBinding(
 		key.WithKeys("l", "right"),
-		key.WithHelp("/l", "move right"),
+		key.WithHelp("<→/l>", "move right"),
 	),
 	Help: key.NewBinding(
 		key.WithKeys("?"),
-		key.WithHelp("?", "Get help"),
+		key.WithHelp("<?>", "Get help"),
 	),
 	Quit: key.NewBinding(
 		key.WithKeys("q", "esc", "ctrl-c"),
-		key.WithHelp("q/esc/ctrl-c", "quit"),
+		key.WithHelp("<q/esc/ctrl-c>", "quit"),
 	),
 	Search: key.NewBinding(
 		key.WithKeys("/"),
-		key.WithHelp("/", "Search"),
+		key.WithHelp("</>", "Search"),
 	),
 }
 
@@ -88,5 +93,6 @@ func (h HelpModel) View() string {
 	h.help.ShowAll = true
 	helpView := h.help.View(h.key)
 	height := strings.Count(helpView, "\n")
-	return "\n" + strings.Repeat("\n", height) + helpView
+
+	return helpStyle.Render("\n" + strings.Repeat("\n", height) + helpView)
 }
