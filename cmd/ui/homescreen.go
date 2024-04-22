@@ -14,11 +14,20 @@ var (
 	tableStyle = lipgloss.NewStyle().BorderStyle(lipgloss.DoubleBorder())
 )
 
+type sessionState uint
+
+const (
+	playlistView sessionState = iota + 1
+	songView
+	searchView
+)
+
 type homeModel struct {
-	Table     component.PlaylistTable
-	SongTable component.SongTable
-	Help      component.HelpModel
-	Search    component.SearchModel
+	SessionView sessionState
+	Table       component.PlaylistTable
+	SongTable   component.SongTable
+	Help        component.HelpModel
+	Search      component.SearchModel
 }
 
 func (m homeModel) Init() tea.Cmd {
@@ -26,12 +35,19 @@ func (m homeModel) Init() tea.Cmd {
 }
 func (m homeModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
+	fmt.Println(msg)
 	switch msg := msg.(type) {
 
 	case tea.KeyMsg:
 		switch msg.String() {
-		case "q":
+		case "q", "ctrl+c", "esc":
 			return m, tea.Quit
+		case "/":
+			if m.SessionView != searchView {
+				m.SessionView = searchView
+				model, cmd := m.Search.Update(msg)
+				return model, cmd
+			}
 		}
 	}
 	return m, cmd
@@ -64,10 +80,11 @@ func InitModel() {
 	modelTable.SetStyles(style)
 
 	m := homeModel{
-		Table:     component.InitPlaylist(),
-		Help:      component.NewHelpModel(),
-		Search:    component.InitSearch(),
-		SongTable: component.InitSong(),
+		SessionView: playlistView,
+		Table:       component.InitPlaylist(),
+		Help:        component.NewHelpModel(),
+		Search:      component.InitSearch(),
+		SongTable:   component.InitSong(),
 	}
 
 	if _, err := tea.NewProgram(m, tea.WithAltScreen()).Run(); err != nil {

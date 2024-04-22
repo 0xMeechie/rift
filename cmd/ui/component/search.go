@@ -1,6 +1,8 @@
 package component
 
 import (
+	"fmt"
+
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -15,7 +17,17 @@ func (s SearchModel) Init() tea.Cmd {
 	return textinput.Blink
 }
 func (s SearchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	return s, nil
+	fmt.Println(msg)
+	switch msg := msg.(type) {
+
+	case tea.KeyMsg:
+		switch msg.String() {
+		case "/":
+			return s, s.textBox.Focus()
+		}
+	}
+
+	return nil, nil
 }
 func (s SearchModel) View() string {
 	return helpStyle.Render(s.textBox.View())
