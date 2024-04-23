@@ -27,7 +27,7 @@ type homeModel struct {
 	Table       component.PlaylistTable
 	SongTable   component.SongTable
 	Help        component.HelpModel
-	Search      component.SearchModel
+	Search      tea.Model
 }
 
 func (m homeModel) Init() tea.Cmd {
@@ -45,8 +45,8 @@ func (m homeModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "/":
 			if m.SessionView != searchView {
 				m.SessionView = searchView
-				model, cmd := m.Search.Update(msg)
-				return model, cmd
+				m.Search, cmd = m.Search.Update(msg)
+
 			}
 		}
 	}

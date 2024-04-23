@@ -27,13 +27,13 @@ func (s SearchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 	}
 
-	return nil, nil
+	return s, nil
 }
 func (s SearchModel) View() string {
 	return helpStyle.Render(s.textBox.View())
 }
 
-func InitSearch() SearchModel {
+func InitSearch() tea.Model {
 	ti := textinput.New()
 	ti.Placeholder = "What are we listening to?"
 	ti.CharLimit = 150
