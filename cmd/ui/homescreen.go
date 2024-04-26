@@ -24,7 +24,7 @@ const (
 
 type homeModel struct {
 	SessionView sessionState
-	Table       tea.Model
+	Table       table.Model
 	SongTable   tea.Model
 	Help        component.HelpModel
 	Search      tea.Model
@@ -54,6 +54,9 @@ func (m homeModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			} else if m.SessionView == songView {
 				m.SessionView = playlistView
 			}
+		case "esc":
+			m.Table.Blur()
+
 		}
 
 		switch m.SessionView {
@@ -63,6 +66,7 @@ func (m homeModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			//			m.SongTable, cmd = m.SongTable.Update(msg)
 		}
 	}
+
 	return m, cmd
 }
 
@@ -84,27 +88,6 @@ func (m homeModel) View() string {
 }
 
 func InitModel() {
-	colums := []table.Column{
-		{Title: "Playlist", Width: 20},
-		{Title: "Total Songs", Width: 15},
-	}
-
-	rows := []table.Row{
-		{"Chill Coding Playlist", "312"},
-		{"Old Vibes", "123"},
-		{"Liked Songs", "4532"},
-	}
-
-	modelTable := table.New(
-		table.WithColumns(colums),
-		table.WithRows(rows),
-		table.WithWidth(50),
-	)
-	style := table.DefaultStyles()
-
-	style.Header = tableStyle
-
-	modelTable.SetStyles(style)
 
 	m := homeModel{
 		SessionView: playlistView,

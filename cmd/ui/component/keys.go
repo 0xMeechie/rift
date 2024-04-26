@@ -41,7 +41,7 @@ func (k keymap) FullHelp() [][]key.Binding {
 	}
 }
 
-var defaultKeys = keymap{
+var DefaultKeys = keymap{
 	Up: key.NewBinding(
 		key.WithKeys("k", "up"),
 		key.WithHelp("<↑/k>", "move up"),
@@ -83,7 +83,7 @@ type HelpModel struct {
 
 func NewHelpModel() HelpModel {
 	return HelpModel{
-		key:  defaultKeys,
+		key:  DefaultKeys,
 		help: help.New(),
 	}
 }

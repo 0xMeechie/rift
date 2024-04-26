@@ -1,8 +1,6 @@
 package component
 
 import (
-	"fmt"
-
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/table"
 	tea "github.com/charmbracelet/bubbletea"
@@ -26,18 +24,16 @@ func (p PlaylistTable) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case tea.KeyMsg:
 		switch {
-		case key.Matches(msg, defaultKeys.ESC):
-			if p.Table.Focused() {
-				p.Table.Blur()
-			} else {
-				p.Table.Focus()
-			}
+		//	case key.Matches(msg, DefaultKeys.ESC):
+		//		if p.Table.Focused() {
+		//			p.Table.Blur()
+		//		} else {
+		//			p.Table.Focus()
+		//		}
 
-		case key.Matches(msg, defaultKeys.Up):
-			fmt.Println("going up")
+		case key.Matches(msg, DefaultKeys.Up):
 			p.Table.MoveUp(1)
-		case key.Matches(msg, defaultKeys.Down):
-			fmt.Println("going down")
+		case key.Matches(msg, DefaultKeys.Down):
 			p.Table.MoveDown(1)
 
 		}
@@ -45,7 +41,7 @@ func (p PlaylistTable) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return p, cmd
 }
 
-func InitPlaylist() PlaylistTable {
+func InitPlaylist() table.Model {
 	colums := []table.Column{
 		{Title: "Playlist", Width: 20},
 		{Title: "Total Songs", Width: 15},
@@ -61,14 +57,12 @@ func InitPlaylist() PlaylistTable {
 		table.WithColumns(colums),
 		table.WithRows(rows),
 		table.WithWidth(50),
+		table.WithFocused(true),
 	)
 	style := table.DefaultStyles()
 
 	modelTable.SetStyles(style)
 
-	m := PlaylistTable{
-		Table: modelTable,
-	}
-	return m
+	return modelTable
 
 }
