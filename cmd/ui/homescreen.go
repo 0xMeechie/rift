@@ -35,12 +35,11 @@ func (m homeModel) Init() tea.Cmd {
 }
 func (m homeModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
-	fmt.Println(msg)
 	switch msg := msg.(type) {
 
 	case tea.KeyMsg:
 		switch msg.String() {
-		case "q", "ctrl+c", "esc":
+		case "q", "ctrl+c":
 			return m, tea.Quit
 		case "/":
 			if m.SessionView != searchView {
@@ -48,13 +47,20 @@ func (m homeModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.Search, cmd = m.Search.Update(msg)
 
 			}
+		case "tab":
+			if m.SessionView == playlistView {
+
+				m.SessionView = songView
+			} else if m.SessionView == songView {
+				m.SessionView = playlistView
+			}
 		}
 
 		switch m.SessionView {
 		case playlistView:
 			m.Table, cmd = m.Table.Update(msg)
-		case songView:
-			m.SongTable, cmd = m.SongTable.Update(msg)
+			//		case songView:
+			//			m.SongTable, cmd = m.SongTable.Update(msg)
 		}
 	}
 	return m, cmd

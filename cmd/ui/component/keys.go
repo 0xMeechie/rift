@@ -21,6 +21,7 @@ type keymap struct {
 	Help   key.Binding
 	Quit   key.Binding
 	Search key.Binding
+	ESC    key.Binding
 }
 
 func (k keymap) ShortHelp() []key.Binding {
@@ -36,6 +37,7 @@ func (k keymap) FullHelp() [][]key.Binding {
 		{k.Search},
 		{k.Help},
 		{k.Quit},
+		{k.ESC},
 	}
 }
 
@@ -67,6 +69,10 @@ var defaultKeys = keymap{
 	Search: key.NewBinding(
 		key.WithKeys("/"),
 		key.WithHelp("</>", "Search"),
+	),
+	ESC: key.NewBinding(
+		key.WithKeys("esc"),
+		key.WithHelp("<esc>", "Focus on table"),
 	),
 }
 

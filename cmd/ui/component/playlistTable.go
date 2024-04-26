@@ -1,6 +1,9 @@
 package component
 
 import (
+	"fmt"
+
+	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/table"
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -22,9 +25,21 @@ func (p PlaylistTable) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 
 	case tea.KeyMsg:
-		switch msg.String() {
-		case "q":
-			return p, tea.Quit
+		switch {
+		case key.Matches(msg, defaultKeys.ESC):
+			if p.Table.Focused() {
+				p.Table.Blur()
+			} else {
+				p.Table.Focus()
+			}
+
+		case key.Matches(msg, defaultKeys.Up):
+			fmt.Println("going up")
+			p.Table.MoveUp(1)
+		case key.Matches(msg, defaultKeys.Down):
+			fmt.Println("going down")
+			p.Table.MoveDown(1)
+
 		}
 	}
 	return p, cmd
