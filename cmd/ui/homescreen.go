@@ -24,8 +24,8 @@ const (
 
 type homeModel struct {
 	SessionView sessionState
-	Table       component.PlaylistTable
-	SongTable   component.SongTable
+	Table       tea.Model
+	SongTable   tea.Model
 	Help        component.HelpModel
 	Search      tea.Model
 }
@@ -49,13 +49,34 @@ func (m homeModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 			}
 		}
+
+		switch m.SessionView {
+		case playlistView:
+			m.Table, cmd = m.Table.Update(msg)
+		case songView:
+			m.SongTable, cmd = m.SongTable.Update(msg)
+		}
 	}
 	return m, cmd
 }
 
 func (m homeModel) View() string {
-	return lipgloss.PlaceHorizontal(100, 25, m.Help.View()) + "\n\n" + lipgloss.PlaceHorizontal(100, 20, m.Search.View()) + "\n\n" + lipgloss.JoinHorizontal(0.2, tableStyle.Render(m.Table.View()), tableStyle.Render(m.SongTable.View()))
+
+	switch m.SessionView {
+
+	case playlistView:
+
+		return lipgloss.PlaceHorizontal(100, 25, m.Help.View()) + "\n\n" + lipgloss.PlaceHorizontal(100, 20, m.Search.View()) + "\n\n" + lipgloss.JoinHorizontal(0.2, tableStyle.Render(m.Table.View()), tableStyle.Render(m.SongTable.View()))
+	case songView:
+		return "Song View"
+	case searchView:
+		return "Search View"
+	}
+
+	return "Error Getting View"
+
 }
+
 func InitModel() {
 	colums := []table.Column{
 		{Title: "Playlist", Width: 20},
