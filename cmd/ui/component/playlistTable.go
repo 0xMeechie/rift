@@ -1,6 +1,8 @@
 package component
 
 import (
+	"fmt"
+
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/table"
 	tea "github.com/charmbracelet/bubbletea"
@@ -32,6 +34,7 @@ func (p PlaylistTable) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		//		}
 
 		case key.Matches(msg, DefaultKeys.Up):
+			fmt.Println("up")
 			p.Table.MoveUp(1)
 		case key.Matches(msg, DefaultKeys.Down):
 			p.Table.MoveDown(1)

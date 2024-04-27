@@ -25,7 +25,7 @@ const (
 type homeModel struct {
 	SessionView sessionState
 	Table       table.Model
-	SongTable   tea.Model
+	SongTable   table.Model
 	Help        component.HelpModel
 	Search      tea.Model
 }
@@ -55,12 +55,33 @@ func (m homeModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.SessionView = playlistView
 			}
 		case "esc":
-			m.Table.Blur()
+			if m.SessionView == playlistView {
+				if m.Table.Focused() {
+					m.Table.Blur()
+				} else {
+					m.Table.Focus()
+				}
+
+			} else if m.SessionView == songView {
+				if m.SongTable.Focused() {
+					m.SongTable.Blur()
+				} else {
+					m.SongTable.Focus()
+				}
+			} else if m.SessionView == searchView {
+				m.SessionView = playlistView
+			}
+		case "enter":
+			if m.SessionView == playlistView {
+				selectedPlaylist := m.Table.SelectedRow()
+				fmt.Println(selectedPlaylist[0])
+			}
 
 		}
 
 		switch m.SessionView {
 		case playlistView:
+
 			m.Table, cmd = m.Table.Update(msg)
 			//		case songView:
 			//			m.SongTable, cmd = m.SongTable.Update(msg)

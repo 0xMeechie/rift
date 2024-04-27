@@ -19,7 +19,7 @@ func (s SongTable) View() string {
 	return s.Table.View()
 }
 
-func InitSong() SongTable {
+func InitSong() table.Model {
 	columns := []table.Column{
 		{Title: "#", Width: 5},
 		{Title: "Title", Width: 25},
@@ -41,8 +41,5 @@ func InitSong() SongTable {
 		table.WithHeight(20),
 		table.WithFocused(true),
 	)
-	model := SongTable{
-		Table: t,
-	}
-	return model
+	return t
 }
