@@ -30,12 +30,10 @@ func (s SearchModel) View() string {
 	return helpStyle.Render(s.textBox.View())
 }
 
-func InitSearch() tea.Model {
+func InitSearch() textinput.Model {
 	ti := textinput.New()
 	ti.Placeholder = "What are we listening to?"
 	ti.CharLimit = 150
-	model := SearchModel{
-		textBox: ti,
-	}
-	return model
+
+	return ti
 }

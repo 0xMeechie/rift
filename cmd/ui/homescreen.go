@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/charmbracelet/bubbles/table"
+	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/fdaygon/rift/cmd/ui/component"
@@ -27,7 +28,7 @@ type homeModel struct {
 	Table       table.Model
 	SongTable   table.Model
 	Help        component.HelpModel
-	Search      tea.Model
+	Search      textinput.Model
 }
 
 func (m homeModel) Init() tea.Cmd {

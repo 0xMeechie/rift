@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/fdaygon/rift/cmd/commands"
 	"github.com/fdaygon/rift/pkg/spotify"
+	"github.com/fdaygon/rift/pkg/terminal"
 )
 
 func HandleAuth(w http.ResponseWriter, r *http.Request) {
@@ -39,8 +39,9 @@ func HandleCallBack(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	terminal.ReplaceToken(`export Spotify_Token="No Token"`, `export Spotify_Token="New Token Goes Here"`)
 	//	router := chi.NewRouter()
-	commands.Execute()
+	//	commands.Execute()
 	//	router.Get("/", HandleAuth)
 	//	router.Get("/login", HandleLogin)
 	//	router.Get("/callback", HandleCallBack)
