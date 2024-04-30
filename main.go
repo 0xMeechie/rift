@@ -6,9 +6,12 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 
+	"github.com/fdaygon/rift/cmd/commands"
 	"github.com/fdaygon/rift/pkg/spotify"
 	"github.com/fdaygon/rift/pkg/terminal"
+	"github.com/go-chi/chi/v5"
 )
 
 func HandleAuth(w http.ResponseWriter, r *http.Request) {
@@ -29,7 +32,8 @@ func HandleAuth(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleLogin(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Log In Sucessful")
+	shell := terminal.CurrentShell()
+	terminal.CheckProfileFile(shell, spotify.AuthCode)
 
 }
 
@@ -39,16 +43,15 @@ func HandleCallBack(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	terminal.ReplaceToken(`export Spotify_Token="No Token"`, `export Spotify_Token="New Token Goes Here"`)
-	//	router := chi.NewRouter()
-	//	commands.Execute()
-	//	router.Get("/", HandleAuth)
-	//	router.Get("/login", HandleLogin)
-	//	router.Get("/callback", HandleCallBack)
+	router := chi.NewRouter()
+	commands.Execute()
+	router.Get("/", HandleAuth)
+	router.Get("/login", HandleLogin)
+	router.Get("/callback", HandleCallBack)
 
-	//	if err := http.ListenAndServe(":3000", router); err != nil {
-	//		fmt.Println("Unable to start server")
-	//		os.Exit(1)
-	//	}
+	if err := http.ListenAndServe(":3000", router); err != nil {
+		fmt.Println("Unable to start server")
+		os.Exit(1)
+	}
 
 }
