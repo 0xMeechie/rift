@@ -13,12 +13,12 @@ var (
 	ClientID        = os.Getenv("Spotify_ID")
 	ClientSecret    = os.Getenv("Spotify_Secret")
 	spotifyTokenURL = "https://accounts.spotify.com/api/token"
-	spotifyAPIURL   = "https://api.spotify.com."
+	SpotifyAPIURL   = "https://api.spotify.com."
 	spotifyAuthURL  = "https://accounts.spotify.com/authorize"
 	redirectURL     = "http://localhost:3000"
 	Token           AccessToken
 	scope           = "user-read-private user-read-email"
-	AuthCode        string
+	AuthCode        = os.Getenv("Spotify_Token")
 	ResponseType    = "authorization_code"
 )
 

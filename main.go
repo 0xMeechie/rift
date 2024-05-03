@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"github.com/fdaygon/rift/cmd/commands"
+	"github.com/fdaygon/rift/pkg/player"
 	"github.com/fdaygon/rift/pkg/spotify"
 	"github.com/fdaygon/rift/pkg/terminal"
 	"github.com/go-chi/chi/v5"
@@ -43,6 +44,7 @@ func HandleCallBack(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	player.GetUser()
 	router := chi.NewRouter()
 	commands.Execute()
 	router.Get("/", HandleAuth)
