@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/fdaygon/rift/pkg/spotify"
+	"github.com/fdaygon/rift/pkg/terminal"
 	"github.com/spf13/cobra"
 )
 
@@ -36,6 +37,9 @@ to quickly create a Cobra application.`,
 		}
 
 		spotify.GetToken()
+
+		shell := terminal.CurrentShell()
+		terminal.CheckProfileFile(shell, spotify.Token.Token)
 
 		fmt.Println("Successfully Logged In")
 		os.Exit(0)
