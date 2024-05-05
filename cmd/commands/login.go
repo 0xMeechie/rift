@@ -36,7 +36,9 @@ to quickly create a Cobra application.`,
 		}
 
 		spotify.GetToken()
-		fmt.Printf("Auth code Received.: %v", spotify.Token.Token)
+
+		fmt.Println("Successfully Logged In")
+		os.Exit(0)
 	},
 }
 

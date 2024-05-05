@@ -41,6 +41,7 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 func HandleCallBack(w http.ResponseWriter, r *http.Request) {
 	//not sure how i want to handle the call back so for now the app will just close out.
 	fmt.Println("Log in failed. Closing application")
+	os.Exit(1)
 }
 
 func main() {
