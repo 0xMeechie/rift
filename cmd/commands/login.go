@@ -17,13 +17,10 @@ import (
 // loginCmd represents the login command
 var loginCmd = &cobra.Command{
 	Use:   "login",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Login into spotify",
+	Long: `Login into spotify. This will provide rift with the needed access token to make
+	api request on your behalf. This will need to be done before starting to ensure that
+	a recent access token is being used and it is not expired.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		spotifyAuthUrl := spotify.UserAuth()
 		if err := exec.Command("open", spotifyAuthUrl).Run(); err != nil {
@@ -42,6 +39,7 @@ to quickly create a Cobra application.`,
 		terminal.CheckProfileFile(shell, spotify.Token.Token)
 
 		fmt.Println("Successfully Logged In")
+		fmt.Println("Closing now")
 		os.Exit(0)
 	},
 }
