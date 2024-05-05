@@ -9,7 +9,6 @@ import (
 	"os"
 
 	"github.com/fdaygon/rift/cmd/commands"
-	"github.com/fdaygon/rift/pkg/player"
 	"github.com/fdaygon/rift/pkg/spotify"
 	"github.com/fdaygon/rift/pkg/terminal"
 	"github.com/go-chi/chi/v5"
@@ -33,6 +32,7 @@ func HandleAuth(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleLogin(w http.ResponseWriter, r *http.Request) {
+
 	shell := terminal.CurrentShell()
 	terminal.CheckProfileFile(shell, spotify.AuthCode)
 
@@ -44,9 +44,8 @@ func HandleCallBack(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	player.GetUser()
 	router := chi.NewRouter()
-	commands.Execute()
+	go commands.Execute()
 	router.Get("/", HandleAuth)
 	router.Get("/login", HandleLogin)
 	router.Get("/callback", HandleCallBack)

@@ -118,6 +118,11 @@ func CheckBash() string {
 
 }
 
+// This is needed to refresh the profile to get the newest profile
+func RefreshProfile() {
+
+}
+
 func CheckPS() bool {
 	command := "cat ~/.zshrc | grep Spotify_Token"
 	cmd := exec.Command("bash", "-c", command)

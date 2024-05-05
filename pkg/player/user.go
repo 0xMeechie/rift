@@ -16,7 +16,7 @@ func GetUser() {
 		os.Exit(1)
 	}
 
-	request.Header.Add("Authorization", "Bearer"+spotify.AuthCode)
+	request.Header.Add("Authorization", "Bearer "+spotify.AuthCode)
 
 	client := &http.Client{}
 

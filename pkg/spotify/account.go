@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
+	"strings"
 )
 
 var (
@@ -18,7 +20,7 @@ var (
 	redirectURL     = "http://localhost:3000"
 	Token           AccessToken
 	scope           = "user-read-private user-read-email"
-	AuthCode        = os.Getenv("Spotify_Token")
+	AuthCode        string
 	ResponseType    = "authorization_code"
 )
 
@@ -27,6 +29,7 @@ type AccessToken struct {
 	TokenType    string `json:"token_type,omitempty"`
 	Duration     uint16 `json:"expires_in,omitempty"`
 	RefreshToken string `json:"refresh_token,omitempty"`
+	Scope        string `json:"scope,omitempty"`
 }
 
 func checkSecrets() {
@@ -44,7 +47,7 @@ func checkSecrets() {
 func UserAuth() string {
 	checkSecrets()
 
-	req, err := http.NewRequest(http.MethodPost, spotifyAuthURL, nil)
+	req, err := http.NewRequest(http.MethodGet, spotifyAuthURL, nil)
 
 	if err != nil {
 		fmt.Printf("Error Creating Request for Auth: %v ", err)
@@ -59,8 +62,6 @@ func UserAuth() string {
 
 	req.URL.RawQuery = params.Encode()
 
-	fmt.Println(req.URL.String())
-
 	return req.URL.String()
 
 }
@@ -73,7 +74,13 @@ func encodeClient(id, secret string) string {
 func GetToken() {
 	checkSecrets()
 
-	req, err := http.NewRequest(http.MethodPost, spotifyTokenURL, nil)
+	bodyData := url.Values{}
+
+	bodyData.Set("grant_type", "authorization_code")
+	bodyData.Set("code", AuthCode)
+	bodyData.Set("redirect_uri", redirectURL)
+
+	req, err := http.NewRequest(http.MethodPost, spotifyTokenURL, strings.NewReader(bodyData.Encode()))
 
 	if err != nil {
 		fmt.Printf("Error With New Request %v", err)
@@ -83,15 +90,7 @@ func GetToken() {
 	authString := encodeClient(ClientID, ClientSecret)
 
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Add("Authorization", authString)
-
-	params := req.URL.Query()
-	params.Add("grant_type", "authorization_code")
-	params.Add("code", AuthCode)
-	params.Add("redirect_uri", redirectURL)
-	fmt.Printf("Auth code: %s", AuthCode)
-
-	req.URL.RawQuery = params.Encode()
+	req.Header.Add("Authorization", "Basic "+authString)
 
 	client := &http.Client{}
 
@@ -110,8 +109,6 @@ func GetToken() {
 	}
 
 	_ = json.Unmarshal(body, &Token)
-
-	fmt.Println(Token)
 
 }
 
