@@ -85,8 +85,6 @@ func CheckZSH() string {
 	// otherwise, print the output from running the command
 
 	if string(out) != "" {
-		fmt.Println("True")
-		fmt.Println(string(out))
 		return string(out)
 	}
 
@@ -109,8 +107,6 @@ func CheckBash() string {
 	// otherwise, print the output from running the command
 
 	if len(string(out)) != 0 {
-		fmt.Println("True")
-		fmt.Println(string(out))
 		return string(out)
 	}
 

@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"time"
 
+	"github.com/fdaygon/rift/cmd/web"
 	"github.com/fdaygon/rift/pkg/spotify"
 	"github.com/fdaygon/rift/pkg/terminal"
 	"github.com/spf13/cobra"
@@ -22,6 +23,7 @@ var loginCmd = &cobra.Command{
 	api request on your behalf. This will need to be done before starting to ensure that
 	a recent access token is being used and it is not expired.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		go web.StartServer()
 		spotifyAuthUrl := spotify.UserAuth()
 		if err := exec.Command("open", spotifyAuthUrl).Run(); err != nil {
 			fmt.Println("Unable to open auth page")
@@ -29,7 +31,7 @@ var loginCmd = &cobra.Command{
 		}
 
 		for spotify.AuthCode == "" {
-			time.Sleep(time.Second * 5)
+			time.Sleep(time.Second * 3)
 			fmt.Println("waiting for user to log in")
 		}
 
