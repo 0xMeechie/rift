@@ -43,11 +43,7 @@ func init() {
 
 func startUp() {
 
-	spotifyAuthUrl := spotify.UserAuth()
-	if err := exec.Command("open", spotifyAuthUrl).Run(); err != nil {
-		fmt.Println("Unable to open auth page")
-		os.Exit(1)
-	}
+
 	//ui.InitStartupList()
 	//	ui.InitModel()
 }
