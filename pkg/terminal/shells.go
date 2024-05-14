@@ -7,6 +7,21 @@ import (
 	"strings"
 )
 
+func RefreshSource(shell string) {
+
+	command := fmt.Sprintf("source ~/.%src", shell)
+	cmd := exec.Command("bash", "-c", command)
+
+	_, err := cmd.Output()
+	if err != nil {
+		fmt.Println("Couldn't refresh shell")
+		return
+	}
+
+	fmt.Println("Shell refresh!")
+
+}
+
 func ReplaceToken(oldToken, newToken, shell string) {
 	newEntry := fmt.Sprintf("export Spotify_Token=%s", newToken)
 	command := fmt.Sprintf("sed 's/%s/%s/' ~/.%src > ~/.%src_tmp && mv ~/.%src_tmp ~/.%src", oldToken, newEntry, shell, shell, shell, shell)
@@ -22,6 +37,7 @@ func ReplaceToken(oldToken, newToken, shell string) {
 		return
 	}
 
+	RefreshSource(shell)
 	fmt.Println("Successfully Replace Token")
 }
 
@@ -36,6 +52,7 @@ func AddToken(token, shell string) {
 		return
 	}
 
+	RefreshSource(shell)
 	fmt.Println("Successfully Added Token")
 
 }
