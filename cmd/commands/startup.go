@@ -4,11 +4,6 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package commands
 
 import (
-	"fmt"
-	"os"
-	"os/exec"
-
-	"github.com/fdaygon/rift/pkg/spotify"
 	"github.com/spf13/cobra"
 )
 
@@ -42,7 +37,6 @@ func init() {
 }
 
 func startUp() {
-
 
 	//ui.InitStartupList()
 	//	ui.InitModel()

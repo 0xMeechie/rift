@@ -31,7 +31,7 @@ var loginCmd = &cobra.Command{
 		}
 
 		for spotify.AuthCode == "" {
-			time.Sleep(time.Second * 3)
+			time.Sleep(time.Second * 2)
 			fmt.Println("waiting for user to log in")
 		}
 
