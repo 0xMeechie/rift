@@ -1,6 +1,7 @@
 package spotify
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -36,6 +37,7 @@ func GetAccount() {
 }
 
 func GetTopItems(params TopParams) {
+	var Tops TopItems
 	if params.Type == "" {
 		fmt.Println("Please Select Artist or Tracks")
 		os.Exit(1)
@@ -68,7 +70,6 @@ func GetTopItems(params TopParams) {
 
 	request.URL.RawQuery = reqParams.Encode()
 
-	fmt.Println(request.URL.String())
 	request.Header.Add("Authorization", "Bearer "+RequestToken)
 
 	response, err := client.Do(request)
@@ -80,6 +81,22 @@ func GetTopItems(params TopParams) {
 
 	btyebody, _ := io.ReadAll(response.Body)
 
-	fmt.Println(string(btyebody))
+	json.Unmarshal(btyebody, &Tops)
+	DisplayTops(Tops)
+
+}
+
+func DisplayTops(topItems TopItems) {
+	fmt.Printf("Here are your top %s\n", topItems.Items[0].Type)
+
+	if topItems.Items[0].Type == "track" {
+		for index, top := range topItems.Items {
+			fmt.Printf("%v. %s by %s\n", index+1, top.Name, top.Artists[0].Name)
+		}
+	} else {
+		for index, top := range topItems.Items {
+			fmt.Printf("%v. %s\n", index+1, top.Name)
+		}
+	}
 
 }
