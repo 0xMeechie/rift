@@ -7,18 +7,20 @@ import (
 	"strings"
 )
 
-func RefreshSource(shell string) {
+func RefreshSource() {
 
-	command := fmt.Sprintf("source ~/.%src", shell)
-	cmd := exec.Command("bash", "-c", command)
+	shell := CurrentShell()
 
-	_, err := cmd.Output()
+	//command := fmt.Sprintf("source ~/.%src", shell)
+	cmd := exec.Command("bash", "-c", shell)
+
+	sr, err := cmd.Output()
 	if err != nil {
 		fmt.Println("Couldn't refresh shell")
 		return
 	}
 
-	fmt.Println("Shell refresh!")
+	fmt.Println(string(sr))
 
 }
 
@@ -37,8 +39,6 @@ func ReplaceToken(oldToken, newToken, shell string) {
 		return
 	}
 
-	RefreshSource(shell)
-	fmt.Println("Successfully Replace Token")
 }
 
 func AddToken(token, shell string) {
@@ -52,7 +52,6 @@ func AddToken(token, shell string) {
 		return
 	}
 
-	RefreshSource(shell)
 	fmt.Println("Successfully Added Token")
 
 }

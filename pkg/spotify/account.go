@@ -77,6 +77,12 @@ func GetTopItems(params TopParams) {
 	if err != nil {
 		fmt.Println("Error request tops: ", err)
 		os.Exit(1)
+
+	}
+
+	if response.StatusCode == 401 {
+		fmt.Println("Token is Expired. Please Login and refresh")
+		return
 	}
 
 	btyebody, _ := io.ReadAll(response.Body)
@@ -98,5 +104,9 @@ func DisplayTops(topItems TopItems) {
 			fmt.Printf("%v. %s\n", index+1, top.Name)
 		}
 	}
+
+}
+
+func GetPlaylist() {
 
 }

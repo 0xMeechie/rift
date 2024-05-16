@@ -5,6 +5,7 @@ package commands
 
 import (
 	"github.com/fdaygon/rift/pkg/spotify"
+	"github.com/fdaygon/rift/pkg/terminal"
 	"github.com/spf13/cobra"
 )
 
@@ -23,6 +24,7 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 		Run: func(cmd *cobra.Command, args []string) {
+			terminal.RefreshSource()
 			topChoice := spotify.TopParams{
 				Type:      toptype,
 				Limit:     limit,
