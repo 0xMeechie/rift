@@ -28,6 +28,7 @@ func HandleAuth(w http.ResponseWriter, r *http.Request) {
 
 	spotify.AuthCode = r.URL.Query().Get("code")
 	if spotify.AuthCode != "" {
+		spotify.GetToken()
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
 
 	} else {

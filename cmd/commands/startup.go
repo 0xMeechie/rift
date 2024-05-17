@@ -4,6 +4,14 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package commands
 
 import (
+	"fmt"
+	"os"
+	"os/exec"
+	"time"
+
+	"github.com/fdaygon/rift/cmd/ui"
+	"github.com/fdaygon/rift/cmd/web"
+	"github.com/fdaygon/rift/pkg/spotify"
 	"github.com/spf13/cobra"
 )
 
@@ -18,7 +26,21 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		startUp()
+		go web.StartServer()
+		spotifyAuthUrl := spotify.UserAuth()
+		if err := exec.Command("open", spotifyAuthUrl).Run(); err != nil {
+			fmt.Println("Unable to open auth page")
+			os.Exit(1)
+		}
+
+		for spotify.Token.Token == "" {
+			time.Sleep(time.Second * 1)
+			fmt.Println("waiting for user to log in")
+		}
+
+		fmt.Println("Successfully Logged In")
+		spotify.GetAccount()
+		//		startUp()
 	},
 }
 
@@ -38,6 +60,6 @@ func init() {
 
 func startUp() {
 
-	//ui.InitStartupList()
-	//	ui.InitModel()
+	ui.InitStartupList()
+	ui.InitModel()
 }

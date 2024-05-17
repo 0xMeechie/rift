@@ -43,7 +43,7 @@ func ReplaceToken(oldToken, newToken, shell string) {
 
 func AddToken(token, shell string) {
 
-	fileEntry := fmt.Sprintf(`echo export Spotify_Token='%s' >> ~/.%src`, token, shell)
+	fileEntry := fmt.Sprintf(`echo export Spotify_Token='%s >> ~/.%src'`, token, shell)
 
 	cmd := exec.Command("bash", "-c", fileEntry)
 	_, err := cmd.Output()

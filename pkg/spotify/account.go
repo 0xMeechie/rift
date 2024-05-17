@@ -8,6 +8,16 @@ import (
 	"os"
 )
 
+var (
+	User UserAccount
+)
+
+type UserAccount struct {
+	DisplayName string `json:"display_name"`
+	ID          string `json:"id"`
+	Email       string `json:"email"`
+}
+
 type TopParams struct {
 	Type      string
 	TimeRange string
@@ -21,19 +31,20 @@ func GetAccount() {
 	if err != nil {
 		fmt.Println("error with user request")
 	}
-	request.Header.Add("Authorization", "Bearer "+RequestToken)
-	reponse, err := client.Do(request)
+	request.Header.Add("Authorization", "Bearer "+Token.Token)
+	response, err := client.Do(request)
 	if err != nil {
 		fmt.Println("Error getting user profile")
 	}
-	byteBody, err := io.ReadAll(reponse.Body)
+	body, err := io.ReadAll(response.Body)
 
 	if err != nil {
 		fmt.Printf("Error Reading Body: %v", err)
 		os.Exit(1)
 	}
 
-	fmt.Println(string(byteBody))
+	_ = json.Unmarshal(body, &User)
+
 }
 
 func GetTopItems(params TopParams) {
