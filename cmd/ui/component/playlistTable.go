@@ -6,6 +6,7 @@ import (
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/table"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/fdaygon/rift/pkg/spotify"
 )
 
 type PlaylistTable struct {
@@ -45,15 +46,24 @@ func (p PlaylistTable) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func InitPlaylist() table.Model {
+	//Create the columns to the playlist
 	colums := []table.Column{
+		{Title: "#", Width: 5},
 		{Title: "Playlist", Width: 20},
 		{Title: "Total Songs", Width: 15},
 	}
+	rows := []table.Row{}
+	//Get the users playlist and add them to the table
+	playlists := spotify.GetPlaylist()
 
-	rows := []table.Row{
-		{"Chill Coding Playlist", "312"},
-		{"Old Vibes", "123"},
-		{"Liked Songs", "4532"},
+	for idx, playlist := range playlists.Items {
+		row := []string{
+			fmt.Sprint(idx + 1),
+			playlist.Name,
+			fmt.Sprint(playlist.Tracks.Total),
+			playlist.ID,
+		}
+		rows = append(rows, row)
 	}
 
 	modelTable := table.New(

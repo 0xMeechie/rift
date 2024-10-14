@@ -38,9 +38,8 @@ to quickly create a Cobra application.`,
 			fmt.Println("waiting for user to log in")
 		}
 
-		fmt.Println("Successfully Logged In")
 		spotify.GetAccount()
-		//		startUp()
+		startUp()
 	},
 }
 
@@ -60,6 +59,5 @@ func init() {
 
 func startUp() {
 
-	ui.InitStartupList()
 	ui.InitModel()
 }

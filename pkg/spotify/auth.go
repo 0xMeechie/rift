@@ -20,7 +20,7 @@ var (
 	redirectURL     = "http://localhost:3000"
 	Token           AccessToken
 	RequestToken    = os.Getenv("Spotify_Token")
-	scope           = "user-read-private user-read-email user-top-read"
+	scope           = "user-read-private user-read-email user-top-read playlist-read-private playlist-read-collaborative"
 	AuthCode        string
 )
 

@@ -75,7 +75,7 @@ func (m homeModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "enter":
 			if m.SessionView == playlistView {
 				selectedPlaylist := m.Table.SelectedRow()
-				fmt.Println(selectedPlaylist[0])
+				fmt.Println(selectedPlaylist)
 			}
 
 		}

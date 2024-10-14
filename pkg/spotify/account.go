@@ -48,7 +48,7 @@ func GetAccount() {
 }
 
 func GetTopItems(params TopParams) {
-	var Tops TopItems
+	var Tops Top
 	if params.Type == "" {
 		fmt.Println("Please Select Artist or Tracks")
 		os.Exit(1)
@@ -103,7 +103,7 @@ func GetTopItems(params TopParams) {
 
 }
 
-func DisplayTops(topItems TopItems) {
+func DisplayTops(topItems Top) {
 	fmt.Printf("Here are your top %s\n", topItems.Items[0].Type)
 
 	if topItems.Items[0].Type == "track" {
@@ -118,6 +118,28 @@ func DisplayTops(topItems TopItems) {
 
 }
 
-func GetPlaylist() {
+func GetPlaylist() Playlist {
+	var playlists Playlist
 
+	client := http.Client{}
+
+	request, err := http.NewRequest(http.MethodGet, SpotifyAPIURL+"/users/"+User.ID+"/playlists", nil)
+	if err != nil {
+		fmt.Println("error with user request")
+	}
+	request.Header.Add("Authorization", "Bearer "+Token.Token)
+	response, err := client.Do(request)
+	if err != nil {
+		fmt.Println("Error getting user profile")
+	}
+	body, err := io.ReadAll(response.Body)
+
+	if err != nil {
+		fmt.Printf("Error Reading Body: %v", err)
+		os.Exit(1)
+	}
+
+	_ = json.Unmarshal(body, &playlists)
+
+	return playlists
 }
